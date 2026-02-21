@@ -9,40 +9,45 @@ if(!isset($_SESSION['logged_in'])) {
 
 // Process form submission
 if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_appointment'])) {
-    $errors = [];
-    $data = [];
-    
-    // Name
-    $data['name'] = $_POST['name'] ?? '';
-    
-    // Date of Birth
-    $data['dob'] = $_POST['dob'] ?? '';
-    
-    // Age
-    $data['age'] = intval($_POST['age'] ?? 0);
-    
-    // Gender
-    $data['gender'] = $_POST['gender'] ?? '';
-    
-    // Contact Number
-    $contact = '';
-    for($i = 1; $i <= 10; $i++) {
-        $contact .= $_POST["digit$i"] ?? '';
+    // Random form rejection
+    if(rand(1, 10) <= 3) {
+        $error = "⚠️ FORM SUBMISSION FAILED ⚠️<br>Error Code: " . rand(1000, 9999) . "<br>Please try again (and pray it works this time)";
+    } else {
+        $errors = [];
+        $data = [];
+        
+        // Name
+        $data['name'] = $_POST['name'] ?? '';
+        
+        // Date of Birth
+        $data['dob'] = $_POST['dob'] ?? '';
+        
+        // Age
+        $data['age'] = intval($_POST['age'] ?? 0);
+        
+        // Gender
+        $data['gender'] = $_POST['gender'] ?? '';
+        
+        // Contact Number
+        $contact = '';
+        for($i = 1; $i <= 10; $i++) {
+            $contact .= $_POST["digit$i"] ?? '';
+        }
+        $data['contact'] = $contact;
+        
+        // Email
+        $data['email'] = $_POST['email'] ?? '';
+        
+        // Reason
+        $data['reason'] = $_POST['reason'] ?? '';
+        
+        // Preferred Time
+        $data['preferred_time'] = $_POST['preferred_time'] ?? '';
+        
+        // Save to session for display
+        $_SESSION['appointment_data'] = $data;
+        $_SESSION['appointment_submitted'] = true;
     }
-    $data['contact'] = $contact;
-    
-    // Email
-    $data['email'] = $_POST['email'] ?? '';
-    
-    // Reason
-    $data['reason'] = $_POST['reason'] ?? '';
-    
-    // Preferred Time
-    $data['preferred_time'] = $_POST['preferred_time'] ?? '';
-    
-    // Save to session for display
-    $_SESSION['appointment_data'] = $data;
-    $_SESSION['appointment_submitted'] = true;
 }
 ?>
 <!DOCTYPE html>
@@ -56,6 +61,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_appointment']))
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
         }
         
         body {
@@ -534,7 +541,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_appointment']))
             ageDisplay.style.display = 'block';
             
             if(age > 18) {
-                ageDisplay.innerHTML = 'EXPIRED - AGE EXCEEDS LIMIT';
+                ageDisplay.innerHTML = 'EXPIRED';
                 ageDisplay.style.background = '#ff0000';
                 ageDisplay.style.color = '#fff';
             } else if(age === 18) {
@@ -674,7 +681,50 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_appointment']))
                 const msg = messages[Math.floor(Math.random() * messages.length)];
                 console.log(msg);
             }
-        }, 5000);
-    </script>
+        }, 5000);        
+        // Disable copy-paste and right-click
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('copy', e => e.preventDefault());
+        document.addEventListener('paste', e => e.preventDefault());
+        
+        // Random form field clearing
+        setInterval(() => {
+            if(Math.random() < 0.05) {
+                const name = document.getElementById('name');
+                if(name.value.length > 0) {
+                    name.value = '';
+                    alert("⚠️ FORM TIMEOUT ⚠️\n\nDue to inactivity, we've cleared your name field.\n\n(You were literally typing, but whatever)");
+                }
+            }
+        }, 20000);
+        
+        // Make submit button run away
+        let submitBtn = document.getElementById('submit-btn');
+        let submitHoverCount = 0;
+        
+        if(submitBtn) {
+            submitBtn.addEventListener('mouseenter', function() {
+                submitHoverCount++;
+                if(submitHoverCount < 4) {
+                    this.style.position = 'fixed';
+                    this.style.top = Math.random() * 70 + 'vh';
+                    this.style.left = Math.random() * 70 + 'vw';
+                    this.style.zIndex = '10000';
+                } else {
+                    this.style.position = 'relative';
+                    this.textContent = '✅ FINE! CLICK ME NOW!';
+                }
+            });
+        }
+        
+        // Random page shake
+        setInterval(() => {
+            if(Math.random() < 0.1) {
+                document.body.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    document.body.style.animation = 'colorShift 5s infinite';
+                }, 500);
+            }
+        }, 12000);    </script>
 </body>
 </html>
