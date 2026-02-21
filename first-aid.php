@@ -617,6 +617,36 @@ if(!isset($_SESSION['logged_in'])) {
         setTimeout(() => {
             alert('EDUCATIONAL REMINDER\n\nIn an emergency, knowing CPR from a website is like knowing karate from watching movies.\n\nIt might help, but you really want the real training.\n\nTake a certified course (American Red Cross / AHA).\n\nFirst aid knowledge can literally save lives.');
         }, 2000);
+        
+        // Disable right-click and copy
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('copy', e => e.preventDefault());
+        
+        // Random safety tips
+        setInterval(() => {
+            if(Math.random() < 0.15) {
+                const tips = [
+                    "⚠️ REMINDER: Call 911 for real emergencies!",
+                    "💡 TIP: Know where your nearest hospital is!",
+                    "🏥 FACT: First aid training actually works!",
+                    "⚕️ NOTE: This website is NOT a substitute for real medical care!"
+                ];
+                alert(tips[Math.floor(Math.random() * tips.length)]);
+            }
+        }, 18000);
+        
+        // Make buttons harder to click
+        document.querySelectorAll('.emergency-card').forEach((card, idx) => {
+            let clickCount = 0;
+            card.addEventListener('click', function(e) {
+                clickCount++;
+                if(clickCount === 1 && Math.random() < 0.4) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    alert("🚨 WAIT! 🚨\n\nAre you sure you want to learn about this?\n\nIt might be graphic!\n\n(Click again to proceed)");
+                }
+            });
+        });
     </script>
 </body>
 </html>
