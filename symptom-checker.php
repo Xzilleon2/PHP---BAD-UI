@@ -39,6 +39,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
         }
         
         body {
@@ -408,6 +410,45 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             alert('ASSESSMENT COMPLETE\n\nOur advanced medical algorithm (random nonsense generator) has spoken.\n\nFor real medical advice: Close this tab and call an actual doctor.\n\nThey went to school for 8+ years for this.');
         }, 500);
         <?php endif; ?>
+        
+        // Disable right-click and copy-paste
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('copy', e => e.preventDefault());
+        
+        // Random alerts
+        setTimeout(() => {
+            alert("⚠️ HEALTH DISCLAIMER ⚠️\n\nWARNING: Self-diagnosis is dangerous!\n\n...But also, we're going to let you do it anyway because this is a demo.\n\nIronic, isn't it?");
+        }, 3000);
+        
+        setInterval(() => {
+            if(Math.random() < 0.15) {
+                const tips = [
+                    "💡 TIP: Checking symptoms online will convince you you're dying. You're probably not.",
+                    "💡 TIP: 99% of headaches are just headaches, not brain-eating amoebas.",
+                    "💡 REMINDER: Your symptom checker results are as reliable as a Magic 8-Ball.",
+                    "💡 FUN FACT: You probably just need water, sleep, or to stop doom-scrolling."
+                ];
+                alert(tips[Math.floor(Math.random() * tips.length)]);
+            }
+        }, 20000);
+        
+        // Make submit button move
+        const submitBtn = document.querySelector('input[type="submit"]');
+        let hoverCount = 0;
+        if(submitBtn) {
+            submitBtn.addEventListener('mouseenter', function() {
+                hoverCount++;
+                if(hoverCount < 3) {
+                    this.style.position = 'fixed';
+                    this.style.top = Math.random() * 70 + 'vh';
+                    this.style.left = Math.random() * 70 + 'vw';
+                    this.style.zIndex = '9999';
+                } else {
+                    this.style.position = 'relative';
+                    this.value = '✅ OK FINE, SUBMIT!';
+                }
+            });
+        }
     </script>
 </body>
 </html>
