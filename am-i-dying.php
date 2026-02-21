@@ -493,6 +493,39 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             alert('ASSESSMENT COMPLETE!\n\nYou just got medical advice from a website that uses Comic Sans.\n\nLet that sink in.\n\nNow go see an actual healthcare professional.');
         }, 500);
         <?php endif; ?>
+        
+        // Disable right-click and copy
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('copy', e => e.preventDefault());
+        
+        // Dramatic announcements
+        setTimeout(() => {
+            alert("💀 AM I DYING?! 💀\n\nWelcome to the most dramatic self-assessment tool on the internet!\n\nSpoiler Alert: You're probably fine.\n\nBut let's be dramatic about it anyway!");
+        }, 2000);
+        
+        setInterval(() => {
+            if(Math.random() < 0.12) {
+                alert("⚠️ HEALTH TIP ⚠️\n\nIf you Google your symptoms, you'll always get cancer.\n\nMutual funds may vary, but Google diagnosis? Always cancer.\n\nSee a real doctor instead!");
+            }
+        }, 20000);
+        
+        // Make submit button dramatic
+        const submitBtn = document.querySelector('button[type=\"submit\"]');
+        let dramaBtnHover = 0;
+        if(submitBtn) {
+            submitBtn.addEventListener('mouseenter', function() {
+                dramaBtnHover++;
+                if(dramaBtnHover < 3) {
+                    if(confirm("⚠️ WARNING ⚠️\n\nYou're about to find out if you're dying.\n\nAre you emotionally prepared for this?\n\n(It's always \"probably not\" but still)")) {
+                        // Allow hover
+                    } else {
+                        this.style.position = 'fixed';
+                        this.style.top = Math.random() * 70 + 'vh';
+                        this.style.left = Math.random() * 70 + 'vw';
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>
