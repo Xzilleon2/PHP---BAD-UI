@@ -16,7 +16,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["appointment_btn"])) {
     $reason = trim($_POST["reason"]);
     $preferredtime = trim($_POST["preferred_time"]);
 
-    // Initialize User Controller
+    // Initialize Appointment Controller
     $userCntrl = new AppointmentsCntrl($fullname, $birthday, $age, $gender, $contactnumber, $email, $reason, $preferredtime);
 
     // Call scheduleAppointment method
