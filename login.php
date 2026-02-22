@@ -4,25 +4,6 @@ session_start();
 // Randomly fail login 30% of the time just to frustrate users
 $randomFail = (rand(1, 10) <= 3);
 
-// Process login
-if(isset($_POST['action'])) {
-    if($_POST['action'] === 'login') {
-        if($randomFail) {
-            $error = "ERROR: Server timeout. Please try again. (Error Code: " . rand(1000, 9999) . ")";
-        } else {
-            // Simple login logic (no database for demo)
-            $_SESSION['logged_in'] = true;
-            $_SESSION['username'] = $_POST['username'] ?? 'Guest User';
-            header('Location: index.php');
-            exit;
-        }
-    } elseif($_POST['action'] === 'signup') {
-        $_SESSION['logged_in'] = true;
-        $_SESSION['username'] = $_POST['signup_username'] ?? 'New User';
-        header('Location: index.php');
-        exit;
-    }
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">

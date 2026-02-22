@@ -2,52 +2,9 @@
 session_start();
 
 // Simple session check
-if(!isset($_SESSION['logged_in'])) {
+if(!isset($_SESSION['USER_EMAIL'])) {
     header('Location: login.php');
     exit;
-}
-
-// Process form submission
-if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_appointment'])) {
-    // Random form rejection
-    if(rand(1, 10) <= 3) {
-        $error = "⚠️ FORM SUBMISSION FAILED ⚠️<br>Error Code: " . rand(1000, 9999) . "<br>Please try again (and pray it works this time)";
-    } else {
-        $errors = [];
-        $data = [];
-        
-        // Name
-        $data['name'] = $_POST['name'] ?? '';
-        
-        // Date of Birth
-        $data['dob'] = $_POST['dob'] ?? '';
-        
-        // Age
-        $data['age'] = intval($_POST['age'] ?? 0);
-        
-        // Gender
-        $data['gender'] = $_POST['gender'] ?? '';
-        
-        // Contact Number
-        $contact = '';
-        for($i = 1; $i <= 10; $i++) {
-            $contact .= $_POST["digit$i"] ?? '';
-        }
-        $data['contact'] = $contact;
-        
-        // Email
-        $data['email'] = $_POST['email'] ?? '';
-        
-        // Reason
-        $data['reason'] = $_POST['reason'] ?? '';
-        
-        // Preferred Time
-        $data['preferred_time'] = $_POST['preferred_time'] ?? '';
-        
-        // Save to session for display
-        $_SESSION['appointment_data'] = $data;
-        $_SESSION['appointment_submitted'] = true;
-    }
 }
 ?>
 <!DOCTYPE html>
@@ -405,19 +362,19 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_appointment']))
             READ THIS CAREFULLY
         </div>
         
-        <form method="POST" id="appointment-form" onsubmit="return validateForm()">
+        <form method="POST" action="./Process/Appointment.Process.php" id="appointment-form">
             <!-- Name -->
             <div class="form-group">
                 <div class="floating-label">REQUIRED</div>
                 <label>FULL NAME:</label>
-                <input type="text" name="name" id="name" required placeholder="Enter your full name...">
+                <input type="text" name="full_name" id="name" required placeholder="Enter your full name...">
             </div>
             
             <!-- Date of Birth -->
             <div class="form-group">
                 <div class="floating-label">IMPORTANT</div>
                 <label>DATE OF BIRTH:</label>
-                <input type="date" name="dob" id="dob" required onchange="calculateAge()">
+                <input type="date" name="birthday" id="dob" required onchange="calculateAge()">
             </div>
             
             <!-- Age -->
@@ -448,9 +405,12 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_appointment']))
                 <div class="floating-label">REQUIRED</div>
                 <label>CONTACT NUMBER (Select each digit):</label>
                 <p style="font-size: 14px; color: #666; margin-bottom: 10px;">Choose 10 digits from the dropdowns below:</p>
+                
+                <input type="hidden" name="contactnumber" id="contactnumber-hidden">
+
                 <div class="contact-digits">
                     <?php for($i = 1; $i <= 10; $i++): ?>
-                        <select class="digit-select" name="digit<?php echo $i; ?>" required>
+                        <select class="digit-select" name="digit<?php echo $i; ?>" required onchange="updateContactNumber()">
                             <option value="">?</option>
                             <?php for($d = 0; $d <= 9; $d++): ?>
                                 <option value="<?php echo $d; ?>"><?php echo $d; ?></option>
@@ -506,7 +466,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_appointment']))
                 </marquee>
                 <br>
                 <input type="hidden" name="submit_appointment" value="1">
-                <button type="submit" class="submit-btn">
+                <button name="appointment_btn" type="submit" class="submit-btn">
                     SUBMIT APPOINTMENT
                 </button>
                 <br><br>
@@ -609,6 +569,19 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_appointment']))
             document.getElementById('preferred-time-input').value = timeString;
             document.getElementById('time-display').innerHTML = 
                 '⏰ Selected Time: ' + displayHour + ':' + (minute < 10 ? '0' : '') + minute + ' ' + ampm + ' ⏰';
+        }
+
+        function updateContactNumber() {
+            let fullNumber = "";
+            // Select all the dropdowns
+            const selects = document.querySelectorAll('.digit-select');
+            
+            selects.forEach(select => {
+                fullNumber += select.value;
+            });
+
+            // Put the combined string into the hidden field
+            document.getElementById('contactnumber-hidden').value = fullNumber;
         }
         
         function validateForm() {
