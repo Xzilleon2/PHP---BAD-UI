@@ -67,7 +67,7 @@ To run this project on any laptop, you need:
 4. **Start the PHP development server**:
    ```bash
    & 'C:\xampp\php\php.exe' -v
-   & 'C:\xampp\php\php.exe' -S localhost:8000v
+   & 'C:\xampp\php\php.exe' -S localhost:8000
    ```
 
 5. **Open your browser** and navigate to:
