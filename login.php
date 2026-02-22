@@ -4,25 +4,6 @@ session_start();
 // Randomly fail login 30% of the time just to frustrate users
 $randomFail = (rand(1, 10) <= 3);
 
-// Process login
-if(isset($_POST['action'])) {
-    if($_POST['action'] === 'login') {
-        if($randomFail) {
-            $error = "ERROR: Server timeout. Please try again. (Error Code: " . rand(1000, 9999) . ")";
-        } else {
-            // Simple login logic (no database for demo)
-            $_SESSION['logged_in'] = true;
-            $_SESSION['username'] = $_POST['username'] ?? 'Guest User';
-            header('Location: index.php');
-            exit;
-        }
-    } elseif($_POST['action'] === 'signup') {
-        $_SESSION['logged_in'] = true;
-        $_SESSION['username'] = $_POST['signup_username'] ?? 'New User';
-        header('Location: index.php');
-        exit;
-    }
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -154,7 +135,7 @@ if(isset($_POST['action'])) {
             font-weight: bold;
         }
         
-        input[type="text"],
+        input[type="text"], input[type="email"],
         input[type="password"] {
             width: 100%;
             padding: 10px;
@@ -282,16 +263,16 @@ if(isset($_POST['action'])) {
             <div class="error-message"><?php echo $error; ?></div>
             <?php endif; ?>
             
-            <form method="POST" id="login-form" onsubmit="return validateLogin()">
+            <form method="POST" action="./Process/Signin.Process.php">
                 <input type="hidden" name="action" value="login">
                 <div class="form-group">
-                    <label>USERNAME (NO SPECIAL CHARACTERS ALLOWED):</label>
-                    <input type="text" name="username" id="username" placeholder="Enter your username..." required autocomplete="off" onpaste="return false;" oncopy="return false;">
+                    <label>Email:</label>
+                    <input type="email" name="signin_email" id="username" placeholder="Enter your email..." required autocomplete="off" onpaste="return false;" oncopy="return false;">
                 </div>
                 
                 <div class="form-group">
-                    <label>PASSWORD (MUST BE COMPLEX BUT WE WON'T TELL YOU HOW):</label>
-                    <input type="password" name="password" id="password" placeholder="Enter password..." required autocomplete="off" onpaste="return false;" oncopy="return false;">
+                    <label>PASSWORD:</label>
+                    <input type="password" name="signin_password" id="password" placeholder="Enter password..." required autocomplete="off" onpaste="return false;" oncopy="return false;">
                 </div>
                 
                 <div class="form-group">
@@ -299,7 +280,7 @@ if(isset($_POST['action'])) {
                     <input type="text" name="captcha" id="captcha" required autocomplete="off">
                 </div>
                 
-                <button type="submit" class="small-login-btn" id="login-btn" title="Try to click me!">login</button>
+                <button name="signin_btn" type="submit" class="small-login-btn" id="login-btn" title="Try to click me!">login</button>
                 <br><br><br>
                 <a class="small-signup-link" onclick="showSignup()" style="opacity: 0.3;">sign up (click here if you can see this)</a>
             </form>
@@ -320,17 +301,21 @@ if(isset($_POST['action'])) {
     <!-- Signup Modal -->
     <div id="signup-modal">
         <h2 style="color: #ff0000;">CREATE ACCOUNT (QUESTIONABLE DECISION)</h2>
-        <form method="POST">
+        <form method="POST" action="./Process/Signup.Process.php">
             <input type="hidden" name="action" value="signup">
             <div class="form-group">
                 <label>Username:</label>
-                <input type="text" name="signup_username" required>
+                <input type="text" name="signup_name" required>
             </div>
             <div class="form-group">
                 <label>Email (we'll spam you):</label>
-                <input type="text" name="email" required>
+                <input type="text" name="signup_email" required>
             </div>
-            <button type="submit" style="background: #00ff00; padding: 10px 20px; border: none; font-size: 16px; cursor: pointer;">SIGN UP NOW!!!</button>
+            <div class="form-group">
+                <label>Password:</label>
+                <input type="password" name="signup_password" required>
+            </div>
+            <button name="signup_btn" type="submit" style="background: #00ff00; padding: 10px 20px; border: none; font-size: 16px; cursor: pointer;">SIGN UP NOW!!!</button>
             <button type="button" class="modal-close" onclick="closeSignup()">Close</button>
         </form>
     </div>

@@ -2,7 +2,7 @@
 session_start();
 
 // Simple session check
-if(!isset($_SESSION['logged_in'])) {
+if(!isset($_SESSION['USER_EMAIL'])) {
     header('Location: login.php');
     exit;
 }
